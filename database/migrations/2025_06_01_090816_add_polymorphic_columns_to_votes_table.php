@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('answers', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->foreignId('question_id')->constrained()->onDelete('cascade');
-        });
+         Schema::table('votes', function (Illuminate\Database\Schema\Blueprint $table) {
+        $table->unsignedBigInteger('votable_id');
+        $table->string('votable_type');
+    });
     }
 
     /**
@@ -23,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('answers');
+          Schema::table('votes', function (Illuminate\Database\Schema\Blueprint $table) {
+        $table->dropColumn(['votable_id', 'votable_type']);
+    });
     }
 };
