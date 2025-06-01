@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Answer extends Model
 {
-    protected $fillable = ['content', 'question_id', 'user_id'];
  public function user() {
     return $this->belongsTo(User::class);
 }
@@ -16,7 +15,7 @@ public function question() {
 }
 
 public function votes() {
-    return $this->morphMany(Vote::class, 'votable');
+ //   return $this->morphMany(Vote::class, 'votable');
 }
 
 }

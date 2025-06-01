@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Vote;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Question extends Model
@@ -15,7 +15,7 @@ public function answers() {
 }
 
 public function votes() {
-    return $this->morphMany(Vote::class, 'votable');
+   // return $this->morphMany(Vote::class, 'votable');
 }
 
  use HasFactory;

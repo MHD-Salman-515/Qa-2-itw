@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use App\Models\Question;
 class HomeController extends Controller
 {
     // تشغيل الميدل وير auth على كل دوال الكنترولر
@@ -14,6 +15,7 @@ class HomeController extends Controller
     // صفحة الـ Home الرئيسية
     public function index()
     {
-        return view('home');
+     $questions = Question::withCount('answers')->latest()->paginate(10);
+        return view('home', compact('questions'));
     }
 }

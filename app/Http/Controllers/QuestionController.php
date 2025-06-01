@@ -4,20 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Question;
-
+use App\Models\Vote;
+use App\Models\Answer;
+use App\Models\user;
 class QuestionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * عرض قائمة الأسئلة.
      */
     public function index()
     {
-       $questions = Question::withCount('answers')->orderBy('created_at', 'desc')->paginate(10);
+        // جلب الأسئلة مع عدد الإجابات، مرتبة من الأحدث إلى الأقدم، مع تقسيم الصفحات
+        $questions = Question::withCount('answers')->orderBy('created_at', 'desc')->paginate(10);
     return view('questions.index', compact('questions'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * عرض نموذج إنشاء سؤال جديد.
      */
     public function create()
     {
@@ -25,31 +28,35 @@ class QuestionController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * حفظ السؤال الجديد في قاعدة البيانات.
      */
     public function store(Request $request)
     {
-       $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-        'category' => 'nullable|string|max:100',
-    ]);
-    $question = auth()->user()->questions()->create($request->only('title', 'description', 'category'));
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'category' => 'nullable|string|max:100',
+        ]);
 
-    return redirect()->route('home')->with('success', 'Question posted successfully.');
+        // إنشاء السؤال وربطه بالمستخدم الحالي
+        $question = auth()->user()->questions()->create($request->only('title', 'description', 'category'));
+
+        return redirect()->route('home')->with('success', 'تم نشر السؤال بنجاح.');
     }
 
     /**
-     * Display the specified resource.
+     * عرض تفاصيل سؤال معين.
      */
     public function show(Question $question)
     {
-      $question->load('answers.user', 'votes');
-    return view('questions.show', compact('question'));
+        // تحميل الإجابات والمستخدمين المرتبطين بها والتصويتات
+        $question->load('answers.user', 'votes');
+
+        return view('questions.show', compact('question'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * عرض نموذج تعديل سؤال (لم يُنفذ بعد).
      */
     public function edit(string $id)
     {
@@ -57,7 +64,7 @@ class QuestionController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * تحديث سؤال معين (لم يُنفذ بعد).
      */
     public function update(Request $request, string $id)
     {
@@ -65,10 +72,36 @@ class QuestionController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * حذف سؤال معين (لم يُنفذ بعد).
      */
     public function destroy(string $id)
     {
         //
     }
+    public function votes()
+{
+   // return $this->hasMany(Vote::class);
+}
+
+// في Answer.php
+public function vote()
+{
+   // return $this->hasMany(Vote::class);
+}
+
+// في Vote.php
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
+public function question()
+{
+    return $this->belongsTo(Question::class);
+}
+
+public function answer()
+{
+    return $this->belongsTo(Answer::class);
+}
 }
